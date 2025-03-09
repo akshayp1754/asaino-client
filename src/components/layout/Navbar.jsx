@@ -12,9 +12,7 @@ const Navbar = ({ setIsLoginModalOpen, setIsUploadModalOpen }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('token'));
 
 
-  const navigate = useNavigate();
 
-  const isLoggedIn = sessionStorage.getItem("token") !== null;
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -28,6 +26,13 @@ const Navbar = ({ setIsLoginModalOpen, setIsUploadModalOpen }) => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAuthenticated(!!sessionStorage.getItem("token"));
+    }, 500);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogOut = () => {
@@ -59,6 +64,7 @@ const Navbar = ({ setIsLoginModalOpen, setIsUploadModalOpen }) => {
   };
 
   const openLoginModal = () => {
+    console.log("openLoginModal triggered");
     setIsLoginModalOpen(true);
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
@@ -109,7 +115,7 @@ const Navbar = ({ setIsLoginModalOpen, setIsUploadModalOpen }) => {
                   <span className="absolute left-0 bottom-0 w-full h-0.5 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </button>
               </div>
-              {!isLoggedIn ? ( // Note the ! (NOT) operator here
+              {!isAuthenticated ? (
                 <>
                   <button
                     onClick={openLoginModal}
